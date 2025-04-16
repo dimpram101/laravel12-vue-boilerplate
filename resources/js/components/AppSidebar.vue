@@ -5,21 +5,35 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { Bolt, BookCheck, BookOpen, Folder, LayoutGrid, User } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
-const mainNavItems: NavItem[] = [
-   {
-      title: 'Dashboard',
-      href: '/dashboard',
-      icon: LayoutGrid,
-   },
-   {
-      title: 'Users',
-      href: route('admin.users'),
-      icon: LayoutGrid,
-   },
-];
+const mainNavItems: { [key: string]: NavItem[] } = {
+   admin: [
+      {
+         title: 'Users',
+         href: route('admin.users'),
+         icon: User,
+      },
+      {
+         title: 'Roles',
+         href: route('admin.users'),
+         icon: Bolt,
+      },
+      {
+         title: 'Permissions',
+         href: route('admin.users'),
+         icon: BookCheck,
+      },
+   ],
+   general: [
+      {
+         title: 'Dashboard',
+         href: route('dashboard'),
+         icon: LayoutGrid,
+      },
+   ],
+}
 
 const footerNavItems: NavItem[] = [
    {
@@ -42,7 +56,7 @@ const footerNavItems: NavItem[] = [
             <SidebarMenuItem>
                <SidebarMenuButton size="lg" as-child>
                   <Link :href="route('dashboard')">
-                     <AppLogo />
+                  <AppLogo />
                   </Link>
                </SidebarMenuButton>
             </SidebarMenuItem>
@@ -50,7 +64,8 @@ const footerNavItems: NavItem[] = [
       </SidebarHeader>
 
       <SidebarContent>
-         <NavMain :items="mainNavItems" />
+         <NavMain :items="mainNavItems.general" label="General" />
+         <NavMain :items="mainNavItems.admin" label="Admin" />
       </SidebarContent>
 
       <SidebarFooter>
