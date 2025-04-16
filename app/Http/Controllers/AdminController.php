@@ -13,7 +13,7 @@ class AdminController extends Controller
     public function index(Request $request) {
         $users = User::with(['roles'])->get();
         // dd($users);
-        return inertia('dashboard/admin/Users', [
+        return inertia('dashboard/admin/users/UserIndex', [
             'users' => $users,
         ]);
     }

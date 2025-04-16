@@ -17,12 +17,12 @@ const mainNavItems: { [key: string]: NavItem[] } = {
       },
       {
          title: 'Roles',
-         href: route('admin.users'),
+         href: route('admin.roles.index'),
          icon: Bolt,
       },
       {
          title: 'Permissions',
-         href: route('admin.users'),
+         href: route('admin.permissions.index'),
          icon: BookCheck,
       },
    ],
