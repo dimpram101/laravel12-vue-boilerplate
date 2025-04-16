@@ -54,12 +54,23 @@ export function initializeTheme() {
         return;
     }
 
-    // Initialize theme from saved preference or default to system...
-    const savedAppearance = getStoredAppearance();
-    updateTheme(savedAppearance || 'system');
+    
+    // Paksa pakai tema terang
+    updateTheme('light');
 
-    // Set up system theme change listener...
-    mediaQuery()?.addEventListener('change', handleSystemThemeChange);
+    // Hapus listener dark mode dari system
+    mediaQuery()?.removeEventListener('change', handleSystemThemeChange);
+
+    // Set localStorage dan cookie ke 'light'
+    localStorage.setItem('appearance', 'light');
+    setCookie('appearance', 'light');
+
+    // // Initialize theme from saved preference or default to system...
+    // const savedAppearance = getStoredAppearance();
+    // updateTheme(savedAppearance || 'light');
+
+    // // Set up system theme change listener...
+    // mediaQuery()?.addEventListener('change', handleSystemThemeChange);
 }
 
 export function useAppearance() {
