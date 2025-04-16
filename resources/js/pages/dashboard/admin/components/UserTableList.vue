@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/table';
 import TableCell from '@/components/ui/table/TableCell.vue';
 import { User } from '@/types';
+import { Role } from '@/types/model';
 import { ColumnDef, FlexRender, getCoreRowModel, getPaginationRowModel, useVueTable } from '@tanstack/vue-table';
 import { computed, ref } from 'vue';
 import DataTablePagination from './DataTablePagination.vue';
@@ -25,6 +26,14 @@ const columns: ColumnDef<User>[] = [
    {
       accessorKey: 'email',
       header: 'Email',
+   },
+   {
+      accessorKey: 'roles',
+      header: 'Role',
+      cell: ({ row }) => {
+         const roles = row.getValue('roles') as Role[];
+         return roles.length > 0 ? roles.map(item => item.name).join(', ') : 'No Role';
+      },
    },
    {
       accessorKey: 'created_at',
@@ -74,7 +83,7 @@ const table = computed(() => useVueTable({
          </TableHeader>
          <TableBody>
             <template v-if="table.getRowModel().rows.length > 0">
-               <TableRow v-for="row in table.getRowModel().rows" :key="row.id">
+               <TableRow v-for="row in table.getRowModel().rows" :key="row.id" class="h-12">
                   <template v-for="cell in row.getVisibleCells()" :key="cell.id">
                      <TableCell>
                         <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />

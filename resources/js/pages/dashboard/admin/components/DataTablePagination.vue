@@ -41,22 +41,23 @@ defineProps<DataTablePaginationProps>()
             {{ table.getPageCount() }}
          </div>
          <div class="flex items-center space-x-2">
-            <Button variant="outline" class="hidden w-8 h-8 p-0 lg:flex" :disabled="!table.getCanPreviousPage()"
-               @click="table.setPageIndex(0)">
+            <Button variant="outline" class="hidden w-8 h-8 p-0 cursor-pointer disabled:cursor-default lg:flex"
+               :disabled="!table.getCanPreviousPage()" @click="table.setPageIndex(0)">
                <span class="sr-only">Go to first page</span>
                <ChevronsLeft class="w-4 h-4" />
             </Button>
-            <Button variant="outline" class="w-8 h-8 p-0" :disabled="!table.getCanPreviousPage()"
-               @click="table.previousPage()">
+            <Button variant="outline" class="w-8 h-8 p-0 cursor-pointer disabled:cursor-default"
+               :disabled="!table.getCanPreviousPage()" @click="table.previousPage()">
                <span class="sr-only">Go to previous page</span>
                <ChevronLeft class="w-4 h-4" />
             </Button>
-            <Button variant="outline" class="w-8 h-8 p-0" :disabled="!table.getCanNextPage()" @click="table.nextPage()">
+            <Button variant="outline" class="w-8 h-8 p-0 cursor-pointer disabled:cursor-default"
+               :disabled="!table.getCanNextPage()" @click="table.nextPage()">
                <span class="sr-only">Go to next page</span>
                <ChevronRight class="w-4 h-4" />
             </Button>
-            <Button variant="outline" class="hidden w-8 h-8 p-0 lg:flex" :disabled="!table.getCanNextPage()"
-               @click="table.setPageIndex(table.getPageCount() - 1)">
+            <Button variant="outline" class="hidden w-8 h-8 p-0 lg:flex cursor-pointer disabled:cursor-default"
+               :disabled="!table.getCanNextPage()" @click="table.setPageIndex(table.getPageCount() - 1)">
                <span class="sr-only">Go to last page</span>
                <ChevronsRight class="w-4 h-4" />
             </Button>

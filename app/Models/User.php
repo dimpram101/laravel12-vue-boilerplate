@@ -23,10 +23,6 @@ class User extends Authenticatable {
         'password',
     ];
 
-    protected $appends = [
-        'permission'
-    ];
-
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -51,5 +47,9 @@ class User extends Authenticatable {
 
     public function getPermissionAttribute() {
         return $this->getAllPermissions();
+    }
+
+    public function getRoleAttribute() {
+        return $this->getRoleNames();
     }
 }

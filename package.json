@@ -7,9 +7,11 @@
         "dev": "vite",
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
-        "lint": "eslint . --fix"
+        "lint": "eslint . --fix",
+        "typegen": "laravel-typegen"
     },
     "devDependencies": {
+        "@7nohe/laravel-typegen": "^0.6.1",
         "@eslint/js": "^9.19.0",
         "@types/node": "^22.13.5",
         "@vue/eslint-config-typescript": "^14.3.0",
