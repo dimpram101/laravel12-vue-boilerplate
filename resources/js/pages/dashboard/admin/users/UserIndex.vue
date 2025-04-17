@@ -30,7 +30,7 @@ defineProps<{
       <template #header-actions>
          <Button
             as="a"
-            :href="route('admin.roles.index')"
+            :href="route('admin.users.create')"
             variant="outline"
             size="default"
             class="hidden cursor-pointer items-center gap-2 bg-black text-white sm:flex"
@@ -46,7 +46,7 @@ defineProps<{
                </DropdownMenuTrigger>
                <DropdownMenuContent class="w-40" align="start">
                   <DropdownMenuItem>
-                     <Button as="a" :href="route('admin.roles.index')" variant="ghost" size="sm" class="flex w-full items-center gap-2">
+                     <Button as="a" :href="route('admin.users.create')" variant="ghost" size="sm" class="flex w-full items-center gap-2">
                         <UserRoundPlus :size="24" />
                         <span>Add User</span>
                      </Button>

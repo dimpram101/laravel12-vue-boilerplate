@@ -21,6 +21,8 @@ Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () 
 
     Route::prefix('admin')->middleware(['role:admin|super-admin'])->group(function () {
         Route::get('/users', [AdminController::class, 'index'])->name('admin.users');
+        Route::get('/users/create', [AdminController::class, 'createUser'])->name('admin.users.create');
+        Route::post('/users/store', [AdminController::class, 'storeUser'])->name('admin.users.store');
 
         Route::resource('roles', RoleController::class)->names([
             'index' => 'admin.roles.index',
