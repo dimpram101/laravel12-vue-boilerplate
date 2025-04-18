@@ -1,3 +1,5 @@
+import { Role } from ".";
+
 export type User = {
     id: number;
     name: string;
@@ -5,8 +7,8 @@ export type User = {
     email_verified_at?: string;
     created_at?: string;
     updated_at?: string;
-    permissions: any;
-    roles: any;
+    permission: any;
+    role: Role;
 };
 export enum RoleEnum {
     SUPER_ADMIN = "super-admin",
@@ -14,10 +16,4 @@ export enum RoleEnum {
     USER = "user",
     KAPRODI = "kaprodi",
     DOSEN = "dosen"
-}
-
-export type Role = {
-    id: number;
-    name: string;
-    guard_name: string;
 }

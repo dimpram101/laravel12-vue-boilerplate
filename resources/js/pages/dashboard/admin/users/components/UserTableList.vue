@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 
+import DeleteDialog from '@/components/DeleteDialog.vue';
 import {
    Table,
    TableBody,
@@ -8,15 +9,19 @@ import {
    TableRow
 } from '@/components/ui/table';
 import TableCell from '@/components/ui/table/TableCell.vue';
-import { User } from '@/types';
-import { Role } from '@/types/model';
+import { Auth, Role, User } from '@/types';
+import { router, usePage } from '@inertiajs/vue3';
 import { ColumnDef, FlexRender, getCoreRowModel, getPaginationRowModel, useVueTable } from '@tanstack/vue-table';
-import { computed, ref } from 'vue';
+import { computed, h, ref } from 'vue';
 import DataTablePagination from './DataTablePagination.vue';
+import TableActionColumn from './TableActionColumn.vue';
 
 const props = defineProps<{
    users: User[];
 }>();
+
+const pageProps = usePage().props;
+const authId = (pageProps.auth as Auth).user.id;
 
 const columns: ColumnDef<User>[] = [
    {
@@ -47,11 +52,21 @@ const columns: ColumnDef<User>[] = [
          });
       },
    },
+   {
+      header: 'Actions',
+      cell: ({ row }) => h(TableActionColumn, {
+         row,
+         onConfirmDelete: (userId: number) => openConfirmDialog(userId),
+         canDelete: row.original.id !== authId,
+      }),
+   }
 ];
+
 const pagination = ref({
    pageIndex: 0,
    pageSize: 15,
 });
+
 const table = computed(() => useVueTable({
    data: props.users,
    columns,
@@ -69,6 +84,21 @@ const table = computed(() => useVueTable({
    },
 }))
 
+const showDialog = ref(false);
+const selectedUserId = ref<number | null>(null);
+
+function openConfirmDialog(userId: number) {
+   selectedUserId.value = userId;
+   showDialog.value = true;
+}
+
+function confirmDelete() {
+   if (selectedUserId.value !== null) {
+      router.delete(route('admin.users.delete', { id: selectedUserId.value }));
+      showDialog.value = false;
+   }
+}
+
 </script>
 
 <template>
@@ -76,7 +106,7 @@ const table = computed(() => useVueTable({
       <Table>
          <TableHeader>
             <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
-               <TableHead v-for="header in headerGroup.headers" :key="header.id">
+               <TableHead v-for="header in headerGroup.headers" :key="header.id" class="text-bold">
                   {{ header.column.columnDef.header }}
                </TableHead>
             </TableRow>
@@ -86,7 +116,8 @@ const table = computed(() => useVueTable({
                <TableRow v-for="row in table.getRowModel().rows" :key="row.id" class="h-12">
                   <template v-for="cell in row.getVisibleCells()" :key="cell.id">
                      <TableCell>
-                        <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+                        <FlexRender :render="cell.column.columnDef.cell"
+                           :props="{ ...cell.getContext(), onConfirmDelete: openConfirmDialog }" />
                      </TableCell>
                   </template>
                </TableRow>
@@ -104,17 +135,6 @@ const table = computed(() => useVueTable({
    </div>
 
    <DataTablePagination :table="table" />
-   <!-- <div class="flex items-center justify-between mt-4">
-      <div class="text-sm text-muted-foreground">
-         Page {{ table.getState().pagination.pageIndex + 1 }} of {{ table.getPageCount() }}
-      </div>
-      <div class="flex items-center space-x-2">
-         <Button variant="outline" :disabled="!table.getCanPreviousPage()" @click="table.previousPage()">
-            Previous
-         </Button>
-         <Button variant="outline" :disabled="!table.getCanNextPage()" @click="table.nextPage()">
-            Next
-         </Button>
-      </div>
-   </div> -->
+   <DeleteDialog v-model="showDialog" :confirmDelete="confirmDelete" />
+
 </template>

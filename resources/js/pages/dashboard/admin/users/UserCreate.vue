@@ -5,21 +5,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { BreadcrumbItem } from '@/types';
-import { Role } from '@/types/model';
+import { BreadcrumbItem, Role } from '@/types';
+import { CreateUserRequest } from '@/types/formRequests';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { ArrowLeft, LoaderCircle } from 'lucide-vue-next';
 
-const form = useForm<{
-   name: string;
-   email: string;
-   password: string;
-   role: Role | null;
-}>({
+const form = useForm<CreateUserRequest>({
    name: '',
    email: '',
    password: '',
-   role: null,
+   role: '',
 });
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -44,22 +39,18 @@ defineProps<{
 const submit = () => {
    form.post(route('admin.users.store'));
 };
-console.log(form.data());
-console.log(form.errors);
-console.log(form.processing);
-console.log(form.recentlySuccessful);
-
 </script>
 
 <template>
+
    <Head title="Create User" />
 
    <AppLayout :breadcrumbs="breadcrumbs">
       <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
          <div class="flex items-center gap-2">
             <Link class="flex items-center gap-2" :href="route('admin.users')">
-               <ArrowLeft :size="24" />
-               <h1 class="text-2xl font-bold">Create User</h1>
+            <ArrowLeft :size="24" />
+            <h1 class="text-2xl font-bold">Create User</h1>
             </Link>
          </div>
 
@@ -70,33 +61,28 @@ console.log(form.recentlySuccessful);
             <div class="grid grid-cols-2 gap-6">
                <div class="grid gap-2">
                   <Label for="name">Name</Label>
-                  <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name" v-model="form.name" placeholder="Full name" />
+                  <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name" v-model="form.name"
+                     placeholder="Full name" />
                   <InputError :message="form.errors.name" />
                </div>
 
                <div class="grid gap-2">
                   <Label for="email">Email address</Label>
-                  <Input id="email" type="email" required :tabindex="2" autocomplete="email" v-model="form.email" placeholder="email@example.com" />
+                  <Input id="email" type="email" required :tabindex="2" autocomplete="email" v-model="form.email"
+                     placeholder="email@example.com" />
                   <InputError :message="form.errors.email" />
                </div>
 
                <div class="grid gap-2">
                   <Label for="password">Password</Label>
-                  <Input
-                     id="password"
-                     type="password"
-                     required
-                     :tabindex="3"
-                     autocomplete="new-password"
-                     v-model="form.password"
-                     placeholder="Password"
-                  />
+                  <Input id="password" type="password" required :tabindex="3" autocomplete="new-password"
+                     v-model="form.password" placeholder="Password" />
                   <InputError :message="form.errors.password" />
                </div>
 
                <div class="grid gap-2">
                   <Label for="role">Role</Label>
-                  <Select id="role" v-model="form.role" :tabindex="4" placeholder="Select a role">
+                  <Select name="role" id="role" v-model="form.role" :tabindex="4" placeholder="Select a role">
                      <SelectTrigger class="w-full">
                         <SelectValue :placeholder="'Select a role'" />
                      </SelectTrigger>
@@ -109,7 +95,8 @@ console.log(form.recentlySuccessful);
                   <InputError :message="form.errors.role" />
                </div>
 
-               <Button type="submit" class="col-span-2 mt-2 w-full cursor-pointer" tabindex="5" :disabled="form.processing">
+               <Button type="submit" class="col-span-2 mt-2 w-full cursor-pointer" tabindex="5"
+                  :disabled="form.processing">
                   <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
                   Create account
                </Button>

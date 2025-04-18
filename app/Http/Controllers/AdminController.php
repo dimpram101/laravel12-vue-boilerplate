@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Admin\CreateUserRequest;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller {
@@ -26,22 +25,22 @@ class AdminController extends Controller {
         ]);
     }
 
-    public function storeUser(Request $request) {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-            'role' => 'required|string|exists:roles,name',
-        ]);
+    public function storeUser(CreateUserRequest $request) {
+        $data = $request->validated();
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
         ]);
 
-        $user->assignRole($request->roles);
+        $user->assignRole($data['role']);
 
         return to_route('admin.users')->with('success', 'User created successfully');
+    }
+
+    public function deleteUser(Request $request, User $user) {
+        $user->delete();
+        return to_route('admin.users')->with('success', 'User deleted successfully');
     }
 }
