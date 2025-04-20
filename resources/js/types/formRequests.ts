@@ -12,3 +12,7 @@ export type CreateUserRequest = {
     password: string;
     role: string;
 };
+export type CreateRoleRequest = {
+    name: string;
+    permissions: string[];
+};

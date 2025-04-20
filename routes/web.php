@@ -29,6 +29,8 @@ Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () 
             'index' => 'admin.roles.index',
             'create' => 'admin.roles.create',
             'show' => 'admin.roles.show',
+            'store' => 'admin.roles.store',
+            'destroy' => 'admin.roles.delete',
         ]);
 
         Route::resource('permissions', PermissionController::class)->names([

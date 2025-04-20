@@ -32,5 +32,11 @@ export type BreadcrumbItemType = BreadcrumbItem;
 export type Role = {
     id: number;
     name: string;
-    guard_name: string;
+    guardname: string;
+    permission: Permission;
+}
+
+export type Permission = {
+    id: number;
+    name: string;
 }
