@@ -6,23 +6,26 @@ import { Edit, Trash } from 'lucide-vue-next';
 const props = defineProps<{
    row: Row<any>;
    canDelete?: boolean;
-   editRouteName: string;
+   editRouteName?: string;
+   onEdit?: (row: any) => void;
 }>();
 
 const emit = defineEmits<{
    (e: 'confirm-delete', id: number): void;
 }>();
+
+function handleEdit() {
+   if (props.onEdit) {
+      props.onEdit(props.row.original);
+   } else if (props.editRouteName) {
+      window.location.href = route(props.editRouteName, { id: props.row.original.id });
+   }
+}
 </script>
 
 <template>
    <div class="flex items-center gap-2">
-      <Button
-         as="a"
-         :href="route(props.editRouteName, { id: props.row.original.id })"
-         variant="default"
-         size="icon"
-         class="cursor-pointer bg-yellow-400"
-      >
+      <Button type="button" variant="default" size="icon" class="cursor-pointer bg-yellow-400" @click="handleEdit">
          <Edit :size="16" class="text-black" />
       </Button>
 

@@ -4,39 +4,40 @@ import type { Config } from 'ziggy-js';
 export * from './model';
 
 export interface Auth {
-    user: User;
+   user: User;
 }
 
 export interface BreadcrumbItem {
-    title: string;
-    href: string;
+   title: string;
+   href: string;
 }
 
 export interface NavItem {
-    title: string;
-    href: string;
-    icon?: LucideIcon;
-    isActive?: boolean;
+   title: string;
+   href: string;
+   icon?: LucideIcon;
+   isActive?: boolean;
 }
 
 export interface SharedData extends PageProps {
-    name: string;
-    quote: { message: string; author: string };
-    auth: Auth;
-    ziggy: Config & { location: string };
-    sidebarOpen: boolean;
+   name: string;
+   quote: { message: string; author: string };
+   auth: Auth;
+   ziggy: Config & { location: string };
+   sidebarOpen: boolean;
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;
 
 export type Role = {
-    id: number;
-    name: string;
-    guardname: string;
-    permission: Permission;
-}
+   permissions: Permission[];
+   id: number;
+   name: string;
+   guardname: string;
+   permission: Permission[];
+};
 
 export type Permission = {
-    id: number;
-    name: string;
-}
+   id: number;
+   name: string;
+};
