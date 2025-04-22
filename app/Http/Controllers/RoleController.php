@@ -38,22 +38,10 @@ class RoleController extends Controller {
             'permissions' => ['array'],
             'permissions.*' => ['string'],
         ]);
-    
-        $newPermissions = collect($validated['permissions'] ?? [])->sort()->values()->toArray();
-    
-        $otherRoles = Role::with('permissions')->where('id', '!=', $role->id)->get();
-    
-        foreach ($otherRoles as $other) {
-            $existingPermissions = $other->permissions->pluck('name')->sort()->values()->toArray();
-    
-            if ($newPermissions === $existingPermissions) {
-                return redirect()->back()->with('error', 'Another role already has the same set of permissions: ' . $other->name)->withInput();
-            }
-        }
-    
+
         $role->update(['name' => $validated['name']]);
         $role->syncPermissions($validated['permissions']);
-    
+
         return redirect()->route('admin.roles.index')->with('success', 'Role updated successfully.');
     }
 
@@ -63,22 +51,10 @@ class RoleController extends Controller {
             'permissions' => 'array',
             'permissions.*' => 'exists:permissions,name',
         ]);
-    
-        $newPermissions = collect($validated['permissions'] ?? [])->sort()->values()->toArray();
-    
-        $roles = Role::with('permissions')->get();
-    
-        foreach ($roles as $existingRole) {
-            $existingPermissions = $existingRole->permissions->pluck('name')->sort()->values()->toArray();
-    
-            if ($newPermissions === $existingPermissions) {
-                return redirect()->back()->with('error', 'A role with the exact same permissions already exists: ' . $existingRole->name)->withInput();
-            }
-        }
-    
+
         $role = Role::create(['name' => $validated['name']]);
         $role->syncPermissions($validated['permissions']);
-    
+
         return redirect()->route('admin.roles.index')->with('success', 'Role created successfully.');
     }
     

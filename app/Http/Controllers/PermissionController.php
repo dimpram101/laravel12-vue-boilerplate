@@ -56,6 +56,9 @@ class PermissionController extends Controller
     }
 
     public function destroy(Request $request, Permission $permission) {
+        if ($permission->roles()->count() > 0) {
+            return redirect()->route('admin.permissions.index')->with('error', 'Cannot delete permission: it is currently assigned to one or more roles.');
+        }
         $permission->delete();
 
         return redirect()->route('admin.permissions.index')->with('success', 'Permission deleted successfully');
