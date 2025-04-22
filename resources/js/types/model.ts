@@ -8,7 +8,7 @@ export type User = {
     created_at?: string;
     updated_at?: string;
     permission: any;
-    role: Role;
+    roles: Role[];
 };
 export enum RoleEnum {
     SUPER_ADMIN = "super-admin",

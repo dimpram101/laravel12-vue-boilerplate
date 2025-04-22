@@ -23,6 +23,8 @@ Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () 
         Route::get('/users', [AdminController::class, 'index'])->name('admin.users');
         Route::get('/users/create', [AdminController::class, 'createUser'])->name('admin.users.create');
         Route::post('/users/store', [AdminController::class, 'storeUser'])->name('admin.users.store');
+        Route::get('/users/{user}', [AdminController::class, 'editUser'])->name('admin.users.edit');
+        Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update');
         Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
 
         Route::resource('roles', RoleController::class)->names([

@@ -30,4 +30,11 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
+        $exceptions->render(function (Throwable $e, $request) {
+            if ($e instanceof \Spatie\Permission\Exceptions\UnauthorizedException) {
+                return redirect()->back()->with('error', "You are not authorized to access this page.");
+            }
+
+            return redirect()->back()->with('error', $e->getMessage());
+        });
     })->create();
