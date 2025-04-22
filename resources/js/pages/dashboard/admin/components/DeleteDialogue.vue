@@ -1,13 +1,39 @@
-<!-- Yang ini dibuat dinamis aja komponennya, kasih <slot/> jadi bisa dicustom langsung di beda beda file -->
+<script setup lang="ts">
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-<!-- kayak misal di RoleIndex.vue
-   <DeleteDialogue>
-      isi kontennya nampilin keterangan kayak "Apakah yakin ingin menghapus role ini?"
-   </DeleteDialogue>
--->
+const props = defineProps<{
+   modelValue: boolean;
+}>();
 
-<!-- nah kalau di PermissionIndex.vue
-   <DeleteDialogue>
-      isi kontennya nampilin keterangan kayak "Apakah yakin ingin menghapus permission ini?"
-   </DeleteDialogue>
--->
+const emit = defineEmits<{
+   (e: 'update:modelValue', value: boolean): void;
+   (e: 'confirm'): void;
+}>();
+
+function close() {
+   emit('update:modelValue', false);
+}
+
+function confirm() {
+   emit('confirm');
+   close();
+}
+</script>
+
+<template>
+   <Dialog :open="props.modelValue" @update:open="(v) => emit('update:modelValue', v)">
+      <DialogContent>
+         <DialogHeader>
+            <DialogTitle>Delete Confirmation</DialogTitle>
+         </DialogHeader>
+
+         <slot />
+
+         <DialogFooter>
+            <Button variant="outline" class="cursor-pointer" @click="close">Cancel</Button>
+            <Button variant="destructive" class="cursor-pointer" @click="confirm">Yes, delete</Button>
+         </DialogFooter>
+      </DialogContent>
+   </Dialog>
+</template>

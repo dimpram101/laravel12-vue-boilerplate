@@ -29,10 +29,18 @@ Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () 
             'index' => 'admin.roles.index',
             'create' => 'admin.roles.create',
             'show' => 'admin.roles.show',
+            'update' => 'admin.roles.update',
+            'store' => 'admin.roles.store',
+            'destroy' => 'admin.roles.delete',
         ]);
 
         Route::resource('permissions', PermissionController::class)->names([
             'index' => 'admin.permissions.index',
+            'create' => 'admin.permissions.create',
+            'show' => 'admin.permissions.show',
+            'update' => 'admin.permissions.update',
+            'store' => 'admin.permissions.store',
+            'destroy' => 'admin.permissions.delete',
         ]);
     });
 });
