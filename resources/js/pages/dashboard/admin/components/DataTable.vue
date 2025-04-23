@@ -43,7 +43,9 @@ function openConfirmDialog(id: number) {
 
 function confirmDelete() {
    if (selectedId.value !== null && props.deleteRouteName) {
-      router.delete(route(props.deleteRouteName, { id: selectedId.value }));
+      router.delete(route(props.deleteRouteName, { id: selectedId.value }), {
+         preserveState: false,
+      });
       showDialog.value = false;
    }
 }
