@@ -8,9 +8,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Permission } from '@/types';
 import { CreateRoleRequest } from '@/types/formRequests';
 import { useForm } from '@inertiajs/vue3';
-import { ColumnDef, FlexRender, getCoreRowModel, getPaginationRowModel, useVueTable } from '@tanstack/vue-table';
+import { ColumnDef, FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table';
 import { LoaderCircle } from 'lucide-vue-next';
-import { computed, h, ref } from 'vue';
+import { h } from 'vue';
 
 const props = defineProps<{
    permissions: Permission[];
@@ -36,39 +36,25 @@ const columns: ColumnDef<Permission>[] = [
       header: 'Select',
       cell: ({ row }) =>
          h(Checkbox, {
-            modelValue: form.permissions.includes(row.original.name),
+            modelValue: form.permissions!.includes(row.original.name),
             'onUpdate:modelValue': (value: boolean | 'indeterminate') => {
                if (value === 'indeterminate') return;
                const permName = row.original.name;
-               if (value && !form.permissions.includes(permName)) {
-                  form.permissions.push(permName);
+               if (value && !form.permissions!.includes(permName)) {
+                  form.permissions!.push(permName);
                } else if (!value) {
-                  form.permissions = form.permissions.filter((p) => p !== permName);
+                  form.permissions = form.permissions!.filter((p) => p !== permName);
                }
             },
          }),
    },
 ];
 
-const pagination = ref({
-   pageIndex: 0,
-   pageSize: 15,
+const table = useVueTable({
+   data: props.permissions,
+   columns,
+   getCoreRowModel: getCoreRowModel(),
 });
-
-const table = computed(() =>
-   useVueTable({
-      data: props.permissions,
-      columns,
-      getCoreRowModel: getCoreRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
-      state: {
-         pagination: pagination.value,
-      },
-      onPaginationChange: (updater) => {
-         pagination.value = typeof updater === 'function' ? updater(pagination.value) : updater;
-      },
-   }),
-);
 
 const submit = () => {
    if (props.isEdit) {

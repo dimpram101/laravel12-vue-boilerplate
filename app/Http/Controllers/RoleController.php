@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Admin\CreateRoleRequest;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -45,12 +46,8 @@ class RoleController extends Controller {
         return redirect()->route('admin.roles.index')->with('success', 'Role updated successfully.');
     }
 
-    public function store(Request $request) {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:roles,name',
-            'permissions' => 'array',
-            'permissions.*' => 'exists:permissions,name',
-        ]);
+    public function store(CreateRoleRequest $request) {
+        $validated = $request->validated();
 
         $role = Role::create(['name' => $validated['name']]);
         $role->syncPermissions($validated['permissions']);
