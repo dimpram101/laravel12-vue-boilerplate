@@ -5,6 +5,7 @@ export * from './model';
 
 export interface Auth {
    user: User;
+   is_admin: boolean;
 }
 
 export interface BreadcrumbItem {
@@ -21,10 +22,14 @@ export interface NavItem {
 
 export interface SharedData extends PageProps {
    name: string;
-   quote: { message: string; author: string };
    auth: Auth;
    ziggy: Config & { location: string };
    sidebarOpen: boolean;
+   flash: {
+      message: string | null;
+      success: string | null;
+      error: string | null;
+   };
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;
