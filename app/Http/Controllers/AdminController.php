@@ -40,7 +40,14 @@ class AdminController extends Controller {
     }
 
     public function deleteUser(Request $request, User $user) {
+        $auth = $request->user();
+
+        if ($user->hasAnyRole(['super-admin']) && !$auth->hasRole('super-admin')) {
+            return to_route('admin.users')->with('error', 'You are not authorized to delete this user');
+        }
+
         $user->delete();
+
         return to_route('admin.users')->with('success', 'User deleted successfully');
     }
 }
