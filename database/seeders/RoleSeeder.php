@@ -16,21 +16,30 @@ class RoleSeeder extends Seeder
         Role::create([
             'name' => RoleEnum::SUPER_ADMIN->value,
             'guard_name' => 'web',
+        ])->givePermissionTo([
+            'create user',
+            'delete user',
+            'update user',
+            'create role',
+            'delete role',
+            'update role',
+            'create permission',
+            'delete permission',
+            'update permission',
         ]);
         Role::create([
             'name' => RoleEnum::ADMIN->value,
             'guard_name' => 'web',
+        ])->givePermissionTo([
+            'create user',
+            'delete user',
+            'update user',
+            'create role',
+            'delete role',
+            'update role',
         ]);
         Role::create([
             'name' => RoleEnum::USER->value,
-            'guard_name' => 'web',
-        ]);
-        Role::create([
-            'name' => RoleEnum::KAPRODI->value,
-            'guard_name' => 'web',
-        ]);
-        Role::create([
-            'name' => RoleEnum::DOSEN->value,
             'guard_name' => 'web',
         ]);
     }
