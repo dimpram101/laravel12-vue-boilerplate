@@ -5,7 +5,8 @@ import { Edit, Trash } from 'lucide-vue-next';
 
 const props = defineProps<{
    row: Row<any>;
-   canDelete?: boolean;
+   canDelete: boolean;
+   canEdit: boolean;
    editRouteName?: string;
    onEdit?: (row: any) => void;
 }>();
@@ -25,7 +26,7 @@ function handleEdit() {
 
 <template>
    <div class="flex items-center gap-2">
-      <Button type="button" variant="default" size="icon" class="cursor-pointer bg-yellow-400" @click="handleEdit">
+      <Button type="button" variant="default" size="icon" class="cursor-pointer bg-yellow-400" @click="handleEdit" :disabled="!props.canEdit">
          <Edit :size="16" class="text-black" />
       </Button>
 

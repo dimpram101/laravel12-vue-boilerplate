@@ -14,9 +14,10 @@ class AdminController extends Controller {
 
     public function index(Request $request) {
         $users = User::with(['roles'])->get();
-        // dd($users);
+        
         return inertia('dashboard/admin/users/UserIndex', [
             'users' => $users,
+
         ]);
     }
 
@@ -70,7 +71,7 @@ class AdminController extends Controller {
     public function deleteUser(Request $request, User $user) {
         $auth = $request->user();
 
-        if ($user->hasAnyRole(['super-admin']) && !$auth->hasRole('super-admin')) {
+        if ($user->hasAnyRole(['super-admin', 'admin']) && !$auth->hasRole('super-admin')) {
             return to_route('admin.users')->with('error', 'You are not authorized to delete this user');
         }
 

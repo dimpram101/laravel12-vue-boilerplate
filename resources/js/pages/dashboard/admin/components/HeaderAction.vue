@@ -7,6 +7,7 @@ defineProps<{
    label: string;
    icon: any;
    href?: string;
+   disabled?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -22,6 +23,7 @@ const emit = defineEmits<{
       variant="outline"
       size="default"
       class="hidden cursor-pointer items-center gap-2 bg-black text-white sm:flex"
+      :disabled="disabled"
    >
       <component :is="icon" :size="4" />
       <span>{{ label }}</span>

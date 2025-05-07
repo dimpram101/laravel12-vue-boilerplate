@@ -23,6 +23,11 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const props = defineProps<{
    roles: Role[];
+   can: {
+      create: boolean;
+      delete: boolean;
+      edit: boolean;
+   }
 }>();
 
 const dataTableRef = ref<InstanceType<typeof DataTable>>();
@@ -47,7 +52,8 @@ const columns: ColumnDef<Role>[] = [
       cell: ({ row }) =>
          h(TableActionColumn, {
             row,
-            canDelete: true,
+            canDelete: props.can.delete,
+            canEdit: props.can.edit,
             editRouteName: 'admin.roles.show',
             onConfirmDelete: (id: number) => dataTableRef.value?.openConfirmDialog(id),
          }),
@@ -60,7 +66,7 @@ const columns: ColumnDef<Role>[] = [
 
    <AppLayout :breadcrumbs="breadcrumbs">
       <template #header-actions>
-         <HeaderAction label="Add Role" :icon="UserPlus" :href="route('admin.roles.create')" />
+         <HeaderAction label="Add Role" :icon="UserPlus" :href="route('admin.roles.create')" :disabled="!props.can.create" />
       </template>
 
       <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">

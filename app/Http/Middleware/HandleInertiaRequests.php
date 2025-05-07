@@ -43,6 +43,8 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
                 'is_admin' => $request->user() && $request->user()->hasAnyRole(['admin', 'super-admin']),
+                'roles' => $request->user() ? $request->user()->getRoleNames() : [],
+                'permissions' => $request->user() ? $request->user()->getAllPermissions()->pluck('name')->toArray() : [],
             ],
             'ziggy' => [
                 ...(new Ziggy)->toArray(),

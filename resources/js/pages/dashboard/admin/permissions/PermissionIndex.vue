@@ -24,6 +24,11 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const props = defineProps<{
    permissions: Permission[];
+   can: {
+      create: boolean;
+      update: boolean;
+      delete: boolean;
+   };
 }>();
 
 const dataTableRef = ref<InstanceType<typeof DataTable>>();
@@ -42,7 +47,8 @@ const columns: ColumnDef<Permission>[] = [
       cell: ({ row }) =>
          h(TableActionColumn, {
             row,
-            canDelete: true,
+            canDelete: props.can.delete,
+            canEdit: props.can.update,
             onEdit: (permission: Permission) => {
                selectedPermission.value = permission;
                showEditModal.value = true;
@@ -58,7 +64,7 @@ const columns: ColumnDef<Permission>[] = [
 
    <AppLayout :breadcrumbs="breadcrumbs">
       <template #header-actions>
-         <HeaderAction label="Add Permission" :icon="FilePlus" @click="showCreateModal = true" />
+         <HeaderAction label="Add Permission" :icon="FilePlus" @click="showCreateModal = true" :disabled="!props.can.create"/>
          <CreateDialogue :open="showCreateModal" @close="showCreateModal = false" />
       </template>
 

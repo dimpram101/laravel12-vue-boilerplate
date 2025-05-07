@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\RoleEnum;
 use App\Http\Requests\Admin\CreateRoleRequest;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -10,8 +11,14 @@ use Spatie\Permission\Models\Permission;
 class RoleController extends Controller {
     public function index(Request $request) {
         $roles = Role::with('permissions')->get();
+        $user = $request->user();
         return inertia('dashboard/admin/roles/RoleIndex', [
-            'roles' => $roles
+            'roles' => $roles,
+            'can' => [
+                'create' => $user->can('create role'),
+                'edit' => $user->can('update role'),
+                'delete' => $user->can('delete role'),
+            ],
         ]);
     }
 
@@ -23,6 +30,12 @@ class RoleController extends Controller {
     }
 
     public function show(Request $request, Role $role) {
+        $user = $request->user();
+
+        if ($role->name == RoleEnum::SUPER_ADMIN->value && !$user->hasRole(RoleEnum::SUPER_ADMIN->value)) {
+            return redirect()->route('admin.roles.index')->with('error', 'You cannot edit the super admin role.');
+        }
+
         return inertia('dashboard/admin/roles/Edit', [
             'role' => [
                 'id' => $role->id,
@@ -57,6 +70,10 @@ class RoleController extends Controller {
     
 
     public function destroy(Request $request, Role $role) {
+        if ($role->name == RoleEnum::SUPER_ADMIN->value) {
+            return redirect()->route('admin.roles.index')->with('error', 'You cannot delete the super admin role.');
+        }
+
         if ($role->users()->count() > 0) {
             return redirect()->route('admin.roles.index')->with('error', 'Cannot delete role: it is currently assigned to one or more users.');
         }

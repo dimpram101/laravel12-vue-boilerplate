@@ -5,13 +5,25 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 
-class PermissionController extends Controller
-{
+class PermissionController extends Controller {
     public function index(Request $request) {
         $permissions = Permission::all();
 
+        $user = $request->user();
+        // dd($user->getPermissionsViaRoles()->pluck('name')->toArray());
+        // dd(
+        //     $user->can('create permission'),
+        //     $user->can('update permission'),
+        //     $user->can('delete permission'),
+        // );
+
         return inertia('dashboard/admin/permissions/PermissionIndex', [
-            'permissions' => $permissions
+            'permissions' => $permissions,
+            'can' => [
+                'create' => $user->can('create permission'),
+                'update' => $user->can('update permission'),
+                'delete' => $user->can('delete permission'),
+            ],
         ]);
     }
 
@@ -32,11 +44,11 @@ class PermissionController extends Controller
             'name.required' => 'The permission name is required.',
             'name.unique' => 'This permission has already been used.',
         ]);
-    
+
         $permission->update([
             'name' => $validated['name'],
         ]);
-    
+
         return redirect()->route('admin.permissions.index')->with('success', 'Permission updated successfully.');
     }
 
@@ -47,11 +59,11 @@ class PermissionController extends Controller
             'name.required' => 'The permission name is required.',
             'name.unique' => 'The permission has already been used.',
         ]);
-    
+
         Permission::create([
             'name' => $validated['name'],
         ]);
-    
+
         return to_route('admin.permissions.index')->with('success', 'Permission created successfully.');
     }
 
