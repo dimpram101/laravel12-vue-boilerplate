@@ -1,13 +1,6 @@
 <script lang="ts" setup>
-
 import DeleteDialog from '@/components/DeleteDialog.vue';
-import {
-   Table,
-   TableBody,
-   TableHead,
-   TableHeader,
-   TableRow
-} from '@/components/ui/table';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import TableCell from '@/components/ui/table/TableCell.vue';
 import { Auth, Role, User } from '@/types';
 import { router, usePage } from '@inertiajs/vue3';
@@ -37,7 +30,7 @@ const columns: ColumnDef<User>[] = [
       header: 'Role',
       cell: ({ row }) => {
          const roles = row.getValue('roles') as Role[];
-         return roles.length > 0 ? roles.map(item => item.name).join(', ') : 'No Role';
+         return roles.length > 0 ? roles.map((item) => item.name).join(', ') : 'No Role';
       },
    },
    {
@@ -54,12 +47,13 @@ const columns: ColumnDef<User>[] = [
    },
    {
       header: 'Actions',
-      cell: ({ row }) => h(TableActionColumn, {
-         row,
-         onConfirmDelete: (userId: number) => openConfirmDialog(userId),
-         canDelete: row.original.id !== authId,
-      }),
-   }
+      cell: ({ row }) =>
+         h(TableActionColumn, {
+            row,
+            onConfirmDelete: (userId: number) => openConfirmDialog(userId),
+            canDelete: row.original.id !== authId,
+         }),
+   },
 ];
 
 const pagination = ref({
@@ -67,22 +61,24 @@ const pagination = ref({
    pageSize: 15,
 });
 
-const table = computed(() => useVueTable({
-   data: props.users,
-   columns,
-   getCoreRowModel: getCoreRowModel(),
-   getPaginationRowModel: getPaginationRowModel(),
-   state: {
-      pagination: pagination.value,
-   },
-   onPaginationChange: (updater) => {
-      if (typeof updater === 'function') {
-         pagination.value = updater(pagination.value);
-      } else {
-         pagination.value = updater;
-      }
-   },
-}))
+const table = computed(() =>
+   useVueTable({
+      data: props.users,
+      columns,
+      getCoreRowModel: getCoreRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+      state: {
+         pagination: pagination.value,
+      },
+      onPaginationChange: (updater) => {
+         if (typeof updater === 'function') {
+            pagination.value = updater(pagination.value);
+         } else {
+            pagination.value = updater;
+         }
+      },
+   }),
+);
 
 const showDialog = ref(false);
 const selectedUserId = ref<number | null>(null);
@@ -94,11 +90,12 @@ function openConfirmDialog(userId: number) {
 
 function confirmDelete() {
    if (selectedUserId.value !== null) {
-      router.delete(route('admin.users.delete', { id: selectedUserId.value }));
+      router.delete(route('admin.users.delete', { id: selectedUserId.value }), {
+         preserveState: false,
+      });
       showDialog.value = false;
    }
 }
-
 </script>
 
 <template>
@@ -116,25 +113,20 @@ function confirmDelete() {
                <TableRow v-for="row in table.getRowModel().rows" :key="row.id" class="h-12">
                   <template v-for="cell in row.getVisibleCells()" :key="cell.id">
                      <TableCell>
-                        <FlexRender :render="cell.column.columnDef.cell"
-                           :props="{ ...cell.getContext(), onConfirmDelete: openConfirmDialog }" />
+                        <FlexRender :render="cell.column.columnDef.cell" :props="{ ...cell.getContext(), onConfirmDelete: openConfirmDialog }" />
                      </TableCell>
                   </template>
                </TableRow>
             </template>
             <template v-else>
                <TableRow>
-                  <TableCell :colspan="columns.length" class="text-center">
-                     No data available.
-                  </TableCell>
+                  <TableCell :colspan="columns.length" class="text-center"> No data available. </TableCell>
                </TableRow>
             </template>
          </TableBody>
       </Table>
-
    </div>
 
    <DataTablePagination :table="table" />
    <DeleteDialog v-model="showDialog" :confirmDelete="confirmDelete" />
-
 </template>

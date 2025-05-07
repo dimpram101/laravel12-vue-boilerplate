@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { Button } from '@/components/ui/button';
 import { User } from '@/types/model';
+import { Link } from '@inertiajs/vue3';
 import { Row } from '@tanstack/vue-table';
 import { Edit, Trash } from 'lucide-vue-next';
 
@@ -12,7 +13,7 @@ const emit = defineEmits<{
 
 <template>
    <div class="flex items-center gap-2">
-      <Button as="a" :href="route('admin.users', { id: props.row.original.id })" variant="default" size="icon"
+      <Button :as="Link" :href="route('admin.users.edit', props.row.original.id )" variant="default" size="icon"
          class="cursor-pointer bg-yellow-400">
          <Edit :size="16" class="text-black" />
       </Button>

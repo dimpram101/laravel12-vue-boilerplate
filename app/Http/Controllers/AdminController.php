@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Admin\CreateUserRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller {
@@ -37,6 +39,32 @@ class AdminController extends Controller {
         $user->assignRole($data['role']);
 
         return to_route('admin.users')->with('success', 'User created successfully');
+    }
+
+    public function editUser(Request $request, User $user) {
+        $roles = Role::all();
+        $permissions = Permission::all();
+        $user = User::with(['roles', 'permissions'])->find($user->id);
+        return inertia('dashboard/admin/users/UserEdit', [
+            'user' => $user,
+            'roles' => $roles,
+            'permissions' => $permissions,
+        ]);
+    }
+
+    public function updateUser(UpdateUserRequest $request, User $user) {
+        $data = $request->validated();
+
+        $user->update([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => $data['password'] ? bcrypt($data['password']) : $user->password,
+        ]);
+
+        $user->syncRoles($data['role']);
+        $user->syncPermissions($data['permissions'] ?? []);
+
+        return to_route('admin.users')->with('success', 'User updated successfully');
     }
 
     public function deleteUser(Request $request, User $user) {
